@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
-
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch('http://localhost:3330/login', {
         method: 'POST',
@@ -21,15 +25,21 @@ const Login = () => {
       if (!response.ok) {
         const errorData = await response.json();
         alert(`Login failed: ${errorData.message}`);
+        setLoading(false);
         return;
       }
       const userData = await response.json();
-      const token = userData.token;
-      setToken(token);
-      alert('Login successful!');
+      if (!userData.token) {
+        alert('Login failed: No token received');
+        setLoading(false);
+        return;
+      }
+      setToken(userData.token);
+      navigation.navigate('Home');
+      setLoading(false);
     } catch (error) {
       console.error('Error during login:', error);
-      alert('An error occurred during login. Please try again.');
+      setLoading(false);
     }
   };
 
