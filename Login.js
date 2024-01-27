@@ -3,17 +3,34 @@ import React, { useState } from 'react';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
-
-    // Perform login logic here (e.g., send credentials to a server)
-    console.log('Username:', username);
-    console.log('Password:', password);
-    // You can add authentication logic here
-
-    // For demonstration purposes, let's just alert the user about the login
-    alert('Login successful!');
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3330/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: username,
+          password: password,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Login failed: ${errorData.message}`);
+        return;
+      }
+      const userData = await response.json();
+      const token = userData.token;
+      setToken(token);
+      alert('Login successful!');
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert('An error occurred during login. Please try again.');
+    }
   };
 
   return (
