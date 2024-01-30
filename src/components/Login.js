@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
+import { View, Text, TextInput, Button } from 'react-native';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -44,32 +44,31 @@ const Login = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', padding: '20px' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <label style={{ display: 'block', marginBottom: '10px' }}>
-          Username:
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-        </label>
-        <label style={{ display: 'block', marginBottom: '10px' }}>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-        </label>
-        <button type="submit" style={{ width: '100%', padding: '10px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-          Login
-        </button>
-      </form>
-    </div>
+    <View style={{ maxWidth: 400, margin: 'auto', padding: 20 }}>
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>Login</Text>
+      <View>
+        <Text style={{ marginBottom: 10 }}>Username:</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 8 }}
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
+      </View>
+      <View>
+        <Text style={{ marginBottom: 10 }}>Password:</Text>
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 8 }}
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+      </View>
+      <Button
+        title="Login"
+        onPress={handleLogin}
+        color="#4CAF50"
+      />
+    </View>
   );
 };
 
