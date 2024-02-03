@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, GestureResponderEvent } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const Login = () => {
+type RootStackParamList = {
+  Home: undefined; // You can replace 'undefined' with any parameters the 'Home' screen expects
+};
+
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
+
+
+type LoginProps = {};
+
+type UserData = {
+  token: string;
+};
+
+const Login: React.FC<LoginProps> = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
-  const handleLogin = async (e) => {
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  const handleLogin = async (e: GestureResponderEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -28,7 +43,7 @@ const Login = () => {
         setLoading(false);
         return;
       }
-      const userData = await response.json();
+      const userData: UserData = await response.json();
       if (!userData.token) {
         alert('Login failed: No token received');
         setLoading(false);
@@ -51,7 +66,7 @@ const Login = () => {
         <TextInput
           style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 8 }}
           value={username}
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={(text: string) => setUsername(text)}
         />
       </View>
       <View>
@@ -60,12 +75,12 @@ const Login = () => {
           style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 8 }}
           secureTextEntry
           value={password}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text: string) => setPassword(text)}
         />
       </View>
       <Button
         title="Login"
-        onPress={handleLogin}
+        onPress={(event) => handleLogin(event)}
         color="#4CAF50"
       />
     </View>

@@ -1,7 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-const HomeScreen = ({ navigation }) => {
+type HomeScreenProps = {
+  navigation: any;
+};
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Bem-vindo à tela inicial</Text>
