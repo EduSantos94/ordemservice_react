@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo/ngrok": "^4.1.0",
     "@expo/webpack-config": "^19.0.1",
+    "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
     "@types/jest": "^29.5.11",
