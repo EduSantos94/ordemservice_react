@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import api from './services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type HomeScreenProps = {
   navigation: any;
@@ -15,8 +17,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch('http://localhost:3330/users/1');
-      const data = await response.json();
+      const userDataString = await AsyncStorage.getItem('user');
+      const userData = JSON.parse(userDataString ?? '{"user_id": ""}');
+      const userId = userData.user_id;
+      const response = await api.get(`http://localhost:3330/users/${userId}`);
+      const data = response.data;
       setUserData(data);
     } catch (error) {
       console.error('Error fetching user data:', error);

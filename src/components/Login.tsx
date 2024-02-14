@@ -15,6 +15,9 @@ type LoginProps = {};
 
 type UserData = {
   token: string;
+  user: [
+    user_id: string
+  ];
 };
 
 const Login: React.FC<LoginProps> = () => {
@@ -51,6 +54,7 @@ const Login: React.FC<LoginProps> = () => {
       }
       // localStorage.setItem('user_token', userData.token);
       await AsyncStorage.setItem('user_token', userData.token);
+      await AsyncStorage.setItem('user', JSON.stringify(userData.user));
       navigation.navigate('Home');
       setLoading(false);
     } catch (error) {
