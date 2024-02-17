@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Text, TextInput, Button, GestureResponderEvent } from 'react-native';
+import { View, Text, TextInput, Pressable, GestureResponderEvent } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -52,10 +52,12 @@ const Login: React.FC<LoginProps> = () => {
         setLoading(false);
         return;
       }
-      // localStorage.setItem('user_token', userData.token);
       await AsyncStorage.setItem('user_token', userData.token);
       await AsyncStorage.setItem('user', JSON.stringify(userData.user));
-      navigation.navigate('Home');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
       setLoading(false);
     } catch (error) {
       console.error('Error during login:', error);
@@ -83,11 +85,18 @@ const Login: React.FC<LoginProps> = () => {
           onChangeText={(text: string) => setPassword(text)}
         />
       </View>
-      <Button
-        title="Login"
-        onPress={(event) => handleLogin(event)}
-        color="#4CAF50"
-      />
+      <Pressable
+        style={({ pressed }) => ({
+          backgroundColor: pressed ? '#45a049' : '#4CAF50',
+          padding: 10,
+          alignItems: 'center',
+          borderRadius: 5,
+        })}
+        onPress={handleLogin}
+        role="button"
+      >
+        <Text style={{ color: 'white' }}>Login</Text>
+      </Pressable>
     </View>
   );
 };

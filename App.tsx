@@ -1,19 +1,41 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Login from './src/components/Login';
 import HomeScreen from './src/components/HomeScreen';
-import { StyleSheet, Text, View } from 'react-native';
+import Services from './src/components/Services';
+import { StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const user = await AsyncStorage.getItem('user');
+        if (user !== null) {
+          setIsLoggedIn(true);
+        }
+        if (user === null) {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+    checkLoginStatus();
+  });
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
+      <Tab.Navigator initialRouteName={isLoggedIn === null ? 'Login' : isLoggedIn ? 'Home' : 'Login'}>
+        <Tab.Screen name="Login" component={Login} options={{ tabBarStyle: { display: 'none' } }} />
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Services" component={Services} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
