@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import Login from './src/components/Login';
 import HomeScreen from './src/components/HomeScreen';
-import Services from './src/components/Services';
+import Order from './src/components/Order';
 import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,7 +34,7 @@ export default function App() {
       <Tab.Navigator initialRouteName={isLoggedIn === null ? 'Login' : isLoggedIn ? 'Home' : 'Login'}>
         <Tab.Screen name="Login" component={Login} options={{ tabBarStyle: { display: 'none' } }} />
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Services" component={Services} />
+        <Tab.Screen name="Services" component={Order} />
       </Tab.Navigator>
     </NavigationContainer>
   );
