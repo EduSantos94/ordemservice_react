@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
 import api from './services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Card } from 'antd';
+
+const { Meta } = Card;
 
 type HomeScreenProps = {
   navigation: any;
 };
 
+interface OrderType {
+  name: string;
+  price: string;
+  // other properties
+}
+
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [userData, setUserData] = useState<any>(null);
+  const [orderData, setOrderData] = useState<any>(null);
 
   useEffect(() => {
     // Fetch user data when the component mounts
@@ -22,48 +32,51 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       const userId = userData.user_id;
       const response = await api.get(`http://localhost:3330/users/${userId}`);
       const data = response.data;
-      setUserData(data);
+      if(data.user.user_id === null || data.user.user_id === undefined) {
+        setUserData([]);
+        return;
+      }
+      const orders = await api.get(`http://localhost:3330/orders/provider/${userId}`);
+      setOrderData(orders.data.order);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Bem-vindo à tela inicial</Text>
-      <Text style={styles.paragraph}>
-        Esta é a tela inicial da sua aplicação. Adicione mais conteúdo aqui conforme necessário.
-      </Text>
-      {userData && (
-        <Text style={styles.paragraph}>
-          Dados do usuário: {JSON.stringify(userData)}
-        </Text>
-      )}
-      <Button
-        title="Ir para a Tela de Login"
-        onPress={() => navigation.navigate('Login')}
-      />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+    {orderData && orderData.map((order: OrderType, index: number) => (
+      <Card
+        key={index}
+        hoverable
+        style={styles.card}
+        cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+      >
+        <Meta
+          title={order.name ?? "Default Name"}
+          description={order.price ?? "Default Email"}
+        />
+      </Card>
+    ))}
+  </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    // flexDirection: 'column',
+    justifyContent: 'center', // Center vertically
+    alignItems: 'center', // Center horizontally
   },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  card: {
+    width: 240,
+    margin: 8,
   },
-  paragraph: {
-    fontSize: 16,
-    marginBottom: 24,
-    textAlign: 'center',
-  },
+  // image: {
+  //   width: '100%',
+  //   height: 200,
+  // },
 });
 
 export default HomeScreen;
