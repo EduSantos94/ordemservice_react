@@ -13,6 +13,9 @@ type HomeScreenProps = {
 interface OrderType {
   name: string;
   price: string;
+  is_done: boolean;
+  is_paid: boolean;
+  context: string;
   // other properties
 }
 
@@ -56,6 +59,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           title={order.name ?? "Default Name"}
           description={order.price ?? "Default Email"}
         />
+        <div>
+        <p><strong>Status:</strong> {order.is_done ? "Completed" : "In Progress"}</p>
+        <p><strong>Pago:</strong> {order.is_paid ? "Paid" : "Unpaid"}</p>
+        <p><strong>Order Status:</strong> {order.context}</p>
+        </div>
       </Card>
     ))}
   </ScrollView>
