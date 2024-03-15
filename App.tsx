@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import Login from './src/components/Login';
 import HomeScreen from './src/components/HomeScreen';
 import Order from './src/components/Order';
