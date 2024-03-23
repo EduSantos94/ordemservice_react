@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput ,StyleSheet, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './services/api';
+import { BASE_URL } from '@env';
 
 const App: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -21,7 +22,7 @@ const App: React.FC = () => {
       const userDataString = await AsyncStorage.getItem('user');
       const userData = JSON.parse(userDataString ?? '{"user_id": ""}');
       const userId = userData.user_id;
-      const response = await api.get(`http://localhost:3330/users/${userId}`);
+      const response = await api.get(`${BASE_URL}users/${userId}`);
       const data = response.data;
       if(data.user.user_id === null || data.user.user_id === undefined) {
         setUserData([]);
@@ -41,7 +42,7 @@ const App: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      const response = await api.put(`http://localhost:3330/users/${userData.user.user_id}`, {
+      const response = await api.put(`${BASE_URL}users/${userData.user.user_id}`, {
         name,
         email,
         phone,

@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, TextInput, Pressable, GestureResponderEvent } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '@env';
 
 type RootStackParamList = {
   Home: undefined;
@@ -30,7 +31,7 @@ const Login: React.FC<LoginProps> = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:3330/login', {
+      const response = await fetch(`${BASE_URL}login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

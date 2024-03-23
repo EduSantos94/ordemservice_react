@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View, Text, Button } from 'react-native';
 import api from './services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Card } from 'antd';
+import { BASE_URL } from '@env';
 
 const { Meta } = Card;
 
@@ -33,13 +34,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       const userDataString = await AsyncStorage.getItem('user');
       const userData = JSON.parse(userDataString ?? '{"user_id": ""}');
       const userId = userData.user_id;
-      const response = await api.get(`http://localhost:3330/users/${userId}`);
+      const response = await api.get(`${BASE_URL}users/${userId}`);
       const data = response.data;
       if(data.user.user_id === null || data.user.user_id === undefined) {
         setUserData([]);
         return;
       }
-      const orders = await api.get(`http://localhost:3330/orders/provider/${userId}`);
+      const orders = await api.get(`${BASE_URL}orders/provider/${userId}`);
       setOrderData(orders.data.order);
     } catch (error) {
       console.error('Error fetching user data:', error);
