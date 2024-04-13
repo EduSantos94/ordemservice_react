@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Switch, Pressable,Alert, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './services/api';
-// import { MultiSelect } from "react-multi-select-component";
-// import { PaperSelect } from 'react-native-paper-select';
+import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 interface Product {
   product_id: number;
@@ -15,6 +14,11 @@ interface Service {
   product_id: number;
   name: string;
   price: number;
+}
+
+interface ServiceMultipleSelect {
+  key: string;
+  value: string;
 }
 
 const Order: React.FC = () => {
@@ -29,6 +33,16 @@ const Order: React.FC = () => {
   const [newService, setNewService] = useState('');
   const [serviceModalVisible, setServiceModalVisible] = useState(false);
   const [productModalVisible, setProductModalVisible] = useState(false);
+  const [selected, setSelected] = React.useState<ServiceMultipleSelect[]>([]);
+  const data = [
+    {key:'1', value:'Mobiles', disabled:true},
+    {key:'2', value:'Appliances'},
+    {key:'3', value:'Cameras'},
+    {key:'4', value:'Computers', disabled:true},
+    {key:'5', value:'Vegetables'},
+    {key:'6', value:'Diary Products'},
+    {key:'7', value:'Drinks'}
+  ]
 
   const saveNewProduct = async () => {
     try {
@@ -91,6 +105,13 @@ const Order: React.FC = () => {
       </View>
       <View style={{ marginTop: 10 }}>
         <Text style={{ marginBottom: 10 }}>Serviços</Text>
+        <MultipleSelectList 
+        setSelected={(val: ServiceMultipleSelect[]) => setSelected(val)}
+        data={data} 
+        save="value"
+        onSelect={() => alert(selected)} 
+        label="Categories"
+        />
         <Modal animationType="slide"
         transparent={true}
         visible={serviceModalVisible}
@@ -185,8 +206,18 @@ const Order: React.FC = () => {
           style={{ marginRight: 10 }}
         />
       </View>
-      <Pressable onPress={handleSave}>
-        <Text>Save</Text>
+      <Pressable 
+      style={({ pressed }) => ({
+        backgroundColor: pressed ? '#45a049' : '#4CAF50',
+        padding: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+        marginTop: 10
+      })}
+      onPress={handleSave}
+      role="button"
+      >
+        <Text style={{ color: 'white' }}>Save</Text>
       </Pressable>
     </View>
   );
